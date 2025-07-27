@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Bookings Viewer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #1f4037, #99f2c8);
+      margin: 0;
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 30px;
+    }
+
+    #bookings {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .booking {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .booking:hover {
+      transform: scale(1.02);
+    }
+
+    .booking-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #0a3d62;
+    }
+
+    .booking-info {
+      margin-top: 8px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Bookings Viewer</h1>
+  <div id="bookings"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const bookingsDiv = document.getElementById('bookings');
+
+    socket.on('new-booking', (data) => {
+      const div = document.createElement('div');
+      div.className = 'booking';
+      div.innerHTML = `
+        <div class="booking-title">${data.venueName}</div>
+        <div class="booking-info">Party Size: ${data.partySize}</div>
+        <div class="booking-info">Time: ${data.time}</div>
+      `;
+      bookingsDiv.insertBefore(div, bookingsDiv.firstChild);
+    });
+  </script>
+</body>
+</html>
